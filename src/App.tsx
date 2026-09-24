@@ -28,9 +28,17 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleRequestQuote = () => {
+    if (screen === 'confirmation') {
+      handleSubmitAnother();
+    } else {
+      document.getElementById('rfq-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f4f6f9] font-sans">
-      <Header />
+      <Header onRequestQuote={handleRequestQuote} />
 
       <AnimatePresence mode="wait">
         {screen === 'form' ? (
