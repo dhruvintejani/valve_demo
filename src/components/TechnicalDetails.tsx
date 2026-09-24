@@ -75,7 +75,7 @@ export default function TechnicalDetails({
                 expanded ? 'text-[#1d4ed8]' : hasAnyValue ? 'text-green-700' : 'text-gray-600'
               )}
             >
-              {expanded ? 'Additional Technical Details' : hasAnyValue ? 'Additional Details Added' : '+ Add more technical details'}
+              {expanded ? 'Hide optional technical fields' : hasAnyValue ? 'Edit additional details' : 'Add optional technical fields'}
             </span>
             {!expanded && (
               <p className="text-xs text-gray-400 mt-0.5">
