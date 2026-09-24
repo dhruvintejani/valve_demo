@@ -74,11 +74,8 @@ export default function RequiredDetails({
                 if (raw === '' || raw === null) {
                   onQuantityChange('');
                 } else {
-                  const parsed = parseInt(raw, 10);
-                  if (!isNaN(parsed) && parsed >= 1) {
-                    onQuantityChange(parsed);
-                  } else if (parsed < 1) {
-                    onQuantityChange(1);
+                  if (/^\d+$/.test(raw) && Number.isSafeInteger(Number(raw))) {
+                    onQuantityChange(Number(raw));
                   }
                 }
               }}
