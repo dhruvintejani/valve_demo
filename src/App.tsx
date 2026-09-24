@@ -28,9 +28,17 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleRequestQuote = () => {
+    if (screen === 'confirmation') {
+      handleSubmitAnother();
+    } else {
+      document.getElementById('rfq-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f4f6f9] font-sans">
-      <Header />
+      <Header onRequestQuote={handleRequestQuote} />
 
       <AnimatePresence mode="wait">
         {screen === 'form' ? (
@@ -90,7 +98,7 @@ export default function App() {
                   Ball Valve – <span className="text-[#60a5fa]">Request for Quotation</span>
                 </h1>
                 <p className="text-blue-200/70 text-sm mt-1">
-                  Thank you for your interest. We have received your requirement.
+                  Demo preview complete — no real RFQ has been submitted.
                 </p>
               </div>
             </div>

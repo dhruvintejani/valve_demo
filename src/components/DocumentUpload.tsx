@@ -77,7 +77,9 @@ export default function DocumentUpload({ files, onFilesChange }: DocumentUploadP
       const newErrors: FileError[] = [];
 
       fileArray.forEach((file) => {
-        if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
+        const extension = '.' + file.name.split('.').pop()?.toLowerCase();
+        const fallbackAllowed = !file.type && ACCEPTED_FILE_EXTENSIONS.split(',').includes(extension);
+        if (!ACCEPTED_FILE_TYPES.includes(file.type) && !fallbackAllowed) {
           newErrors.push({
             name: file.name,
             message: `"${file.name}" — unsupported file type.`,
@@ -92,7 +94,7 @@ export default function DocumentUpload({ files, onFilesChange }: DocumentUploadP
           return;
         }
         // Check for duplicates
-        const isDuplicate = files.some((f) => f.name === file.name && f.size === file.size);
+        const isDuplicate = [...files, ...validFiles].some((f) => f.name === file.name && f.size === file.size);
         if (isDuplicate) return;
         validFiles.push(file);
       });
@@ -102,10 +104,7 @@ export default function DocumentUpload({ files, onFilesChange }: DocumentUploadP
         onFilesChange([...files, ...validFiles]);
       }
 
-      // Clear error after delay
-      if (newErrors.length > 0) {
-        setTimeout(() => setErrors([]), 5000);
-      }
+
     },
     [files, onFilesChange]
   );
@@ -151,12 +150,18 @@ export default function DocumentUpload({ files, onFilesChange }: DocumentUploadP
             ? 'border-[#2563eb] bg-[#eff6ff] scale-[1.01]'
             : 'border-gray-300 bg-gray-50/50 hover:border-gray-400 hover:bg-gray-50'
         )}
-        onClick={() => inputRef.current?.click()}
+        onClick={(e) => {
+          // A programmatic input click bubbles here; avoid reopening the picker.
+          if (e.target !== inputRef.current) inputRef.current?.click();
+        }}
         role="button"
         tabIndex={0}
         aria-label="Upload files"
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') inputRef.current?.click();
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            inputRef.current?.click();
+          }
         }}
       >
         <input

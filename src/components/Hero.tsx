@@ -69,9 +69,9 @@ export default function Hero() {
           {/* Center: Feature badges */}
           <div className="hidden md:flex flex-col gap-2 lg:ml-auto lg:mr-48">
             {[
-              { icon: Shield, text: 'Reliable Performance' },
-              { icon: Settings, text: 'Wide Range of Configurations' },
-              { icon: Globe, text: 'Expert Technical Support' },
+              { icon: Shield, text: 'Simple, Guided RFQ' },
+              { icon: Settings, text: 'Configurable Requirements' },
+              { icon: Globe, text: 'Optional Technical Documents' },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-full border border-blue-400/30 bg-blue-500/10 flex items-center justify-center flex-shrink-0">

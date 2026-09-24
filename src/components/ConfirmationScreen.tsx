@@ -15,6 +15,7 @@ import {
   Info,
 } from 'lucide-react';
 import { RFQData, SubmissionResult } from '../types/rfq';
+import { displaySpecification } from '../utils/rfqDisplay';
 import { cn } from '../utils/cn';
 import { useState } from 'react';
 
@@ -84,10 +85,13 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
   const valveImage = getValveImage(data.valveType);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(result.rfqReference).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+    if (!navigator.clipboard?.writeText) return;
+    navigator.clipboard.writeText(result.rfqReference)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => setCopied(false));
   };
 
   return (
@@ -123,7 +127,7 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
                 transition={{ delay: 0.3 }}
                 className="text-green-600 text-xs font-bold uppercase tracking-widest mb-1"
               >
-                RFQ Submitted Successfully
+                Demo RFQ Completed
               </motion.div>
               <motion.h2
                 initial={{ opacity: 0, x: -10 }}
@@ -139,7 +143,7 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
                 transition={{ delay: 0.4 }}
                 className="text-gray-600 text-sm leading-relaxed max-w-md"
               >
-                Thank you for your interest. Our sales team will review your requirements and get back to you with a suitable quotation.
+                Your demo RFQ has been created locally. In production, Evolve’s sales team would review your requirements and respond with a suitable quotation. No information has been sent.
               </motion.p>
             </div>
           </div>
@@ -147,7 +151,7 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
           {/* Right: RFQ reference */}
           <div className="bg-gray-50 border-t lg:border-t-0 lg:border-l border-gray-200 p-6 flex flex-col justify-center">
             <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
-              Your RFQ Reference Number
+              Your Demo RFQ Reference
             </div>
             <div className="flex items-center gap-2 mb-4">
               <div className="flex-1 bg-[#eff6ff] border border-[#bfdbfe] rounded-xl px-4 py-3">
@@ -201,7 +205,7 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-800">Request Summary</h3>
-                  <p className="text-xs text-gray-400">Here is a summary of your submitted requirement.</p>
+                  <p className="text-xs text-gray-400">Here is a preview of the details you entered.</p>
                 </div>
               </div>
               <button
@@ -209,7 +213,7 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
                 className="hidden sm:flex items-center gap-1.5 text-xs text-[#2563eb] hover:text-blue-700 font-semibold border border-blue-200 hover:border-blue-300 rounded-lg px-3 py-1.5 transition-colors"
               >
                 <RotateCcw size={12} />
-                Edit & Submit Again
+                Start New Request
               </button>
             </div>
 
@@ -238,20 +242,20 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
                 {/* Details */}
                 <div className="flex-1 min-w-0">
                   <SummaryItem label="Valve Type" value={getValveLabel(data.valveType)} />
-                  <SummaryItem label="Size" value={data.size} />
-                  <SummaryItem label="Pressure Class" value={data.pressureClass} />
+                  <SummaryItem label="Size" value={displaySpecification(data.size, data.otherSize)} />
+                  <SummaryItem label="Pressure Class" value={displaySpecification(data.pressureClass, data.otherPressureClass)} />
                   <SummaryItem
                     label="Quantity"
                     value={data.quantity !== '' && data.quantity ? `${data.quantity} Nos.` : ''}
                   />
                   {data.materialConstruction && (
-                    <SummaryItem label="Material Construction" value={data.materialConstruction} />
+                    <SummaryItem label="Material Construction" value={displaySpecification(data.materialConstruction, data.otherMaterialConstruction)} />
                   )}
                   {data.endConnection && (
-                    <SummaryItem label="End Connection" value={data.endConnection} />
+                    <SummaryItem label="End Connection" value={displaySpecification(data.endConnection, data.otherEndConnection)} />
                   )}
                   {data.applicationMedia && (
-                    <SummaryItem label="Application / Media" value={data.applicationMedia} />
+                    <SummaryItem label="Application / Media" value={displaySpecification(data.applicationMedia, data.otherApplicationMedia)} />
                   )}
                   {data.specialRequirements && (
                     <SummaryItem label="Special Requirements" value={data.specialRequirements} />
@@ -270,7 +274,7 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-800">Uploaded Documents</h3>
-                  <p className="text-xs text-gray-400">{data.files.length} file{data.files.length !== 1 ? 's' : ''} submitted with this RFQ</p>
+                  <p className="text-xs text-gray-400">{data.files.length} file{data.files.length !== 1 ? 's' : ''} selected in this demo</p>
                 </div>
               </div>
               <div className="p-5">
@@ -388,7 +392,7 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
               Submit Another Request
             </button>
             <a
-              href="https://www.evolveindustries.in"
+              href="https://evolveindustries.co.in/"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 font-semibold text-sm px-5 py-3.5 rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200 active:scale-[0.98]"

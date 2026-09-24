@@ -11,23 +11,62 @@ import {
 
 interface TechnicalDetailsProps {
   materialConstruction: string;
+  otherMaterialConstruction: string;
   endConnection: string;
+  otherEndConnection: string;
   applicationMedia: string;
+  otherApplicationMedia: string;
   specialRequirements: string;
   onMaterialChange: (v: string) => void;
+  onOtherMaterialChange: (v: string) => void;
   onEndConnectionChange: (v: string) => void;
+  onOtherEndConnectionChange: (v: string) => void;
   onApplicationMediaChange: (v: string) => void;
+  onOtherApplicationMediaChange: (v: string) => void;
+  errors: {otherMaterialConstruction?: string; otherEndConnection?: string; otherApplicationMedia?: string};
   onSpecialRequirementsChange: (v: string) => void;
+}
+
+function OtherSpecificationInput({ id, value, onChange, error, placeholder }: {
+  id: string;
+  value: string;
+  onChange: (v: string) => void;
+  error?: string;
+  placeholder: string;
+}) {
+  return (
+    <div>
+      <label className="sr-only" htmlFor={id}>{placeholder}</label>
+      <input
+        id={id}
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm focus:border-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+      />
+      {error && <p id={`${id}-error`} role="alert" className="mt-1 text-xs text-red-600">{error}</p>}
+    </div>
+  );
 }
 
 export default function TechnicalDetails({
   materialConstruction,
+  otherMaterialConstruction,
   endConnection,
+  otherEndConnection,
   applicationMedia,
+  otherApplicationMedia,
   specialRequirements,
   onMaterialChange,
+  onOtherMaterialChange,
   onEndConnectionChange,
+  onOtherEndConnectionChange,
   onApplicationMediaChange,
+  onOtherApplicationMediaChange,
+  errors,
   onSpecialRequirementsChange,
 }: TechnicalDetailsProps) {
   const [expanded, setExpanded] = useState(false);
@@ -75,7 +114,7 @@ export default function TechnicalDetails({
                 expanded ? 'text-[#1d4ed8]' : hasAnyValue ? 'text-green-700' : 'text-gray-600'
               )}
             >
-              {expanded ? 'Additional Technical Details' : hasAnyValue ? 'Additional Details Added' : '+ Add more technical details'}
+              {expanded ? 'Hide optional technical fields' : hasAnyValue ? 'Edit additional details' : 'Add optional technical fields'}
             </span>
             {!expanded && (
               <p className="text-xs text-gray-400 mt-0.5">
@@ -112,30 +151,36 @@ export default function TechnicalDetails({
             <div className="pt-4 space-y-4">
               {/* Row 1: Material, End Connection, Application */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <PremiumSelect
-                  id="materialConstruction"
-                  label="Material Construction"
-                  options={MATERIAL_OPTIONS}
-                  value={materialConstruction}
-                  onChange={onMaterialChange}
-                  placeholder="Select material..."
-                />
-                <PremiumSelect
-                  id="endConnection"
-                  label="End Connection"
-                  options={END_CONNECTION_OPTIONS}
-                  value={endConnection}
-                  onChange={onEndConnectionChange}
-                  placeholder="Select connection..."
-                />
-                <PremiumSelect
-                  id="applicationMedia"
-                  label="Application / Media"
-                  options={APPLICATION_MEDIA_OPTIONS}
-                  value={applicationMedia}
-                  onChange={onApplicationMediaChange}
-                  placeholder="Select media..."
-                />
+<div className="min-w-0 space-y-2">
+                  <PremiumSelect id="materialConstruction" label="Material Construction"
+                    options={MATERIAL_OPTIONS} value={materialConstruction} onChange={onMaterialChange}
+                    placeholder="Select material..." />
+                  {materialConstruction === 'other' && (
+                    <OtherSpecificationInput id="otherMaterialConstruction" value={otherMaterialConstruction}
+                      onChange={onOtherMaterialChange} error={errors.otherMaterialConstruction}
+                      placeholder="Specify material..." />
+                  )}
+                </div>
+<div className="min-w-0 space-y-2">
+                  <PremiumSelect id="endConnection" label="End Connection"
+                    options={END_CONNECTION_OPTIONS} value={endConnection} onChange={onEndConnectionChange}
+                    placeholder="Select connection..." />
+                  {endConnection === 'other' && (
+                    <OtherSpecificationInput id="otherEndConnection" value={otherEndConnection}
+                      onChange={onOtherEndConnectionChange} error={errors.otherEndConnection}
+                      placeholder="Specify connection..." />
+                  )}
+                </div>
+<div className="min-w-0 space-y-2">
+                  <PremiumSelect id="applicationMedia" label="Application / Media"
+                    options={APPLICATION_MEDIA_OPTIONS} value={applicationMedia} onChange={onApplicationMediaChange}
+                    placeholder="Select media..." />
+                  {applicationMedia === 'other' && (
+                    <OtherSpecificationInput id="otherApplicationMedia" value={otherApplicationMedia}
+                      onChange={onOtherApplicationMediaChange} error={errors.otherApplicationMedia}
+                      placeholder="Specify application/media..." />
+                  )}
+                </div>
               </div>
 
               {/* Special Requirements */}

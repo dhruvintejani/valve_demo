@@ -25,7 +25,7 @@ import { RFQData, SubmissionResult } from '../types/rfq';
 
 function generateRFQReference(): string {
   const num = Math.floor(1000 + Math.random() * 9000);
-  return `EI-RFQ-2026-${num}`;
+  return `EI-RFQ-${new Date().getFullYear()}-${num}`;
 }
 
 export async function submitRFQ(_data: RFQData): Promise<SubmissionResult> {

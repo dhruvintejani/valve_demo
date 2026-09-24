@@ -12,7 +12,7 @@ const navItems = [
   { label: 'Contact Us', hasDropdown: false },
 ];
 
-export default function Header() {
+export default function Header({ onRequestQuote }: { onRequestQuote: () => void }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -34,7 +34,7 @@ export default function Header() {
               <div>
                 <div className="text-[#1e3a5f] font-extrabold text-lg leading-none tracking-wider uppercase">
                   EVOLVE
-                  <span className="text-[#2563eb]">®</span>
+
                 </div>
                 <div className="text-[#1e3a5f] font-semibold text-[8px] tracking-[0.2em] uppercase leading-none">
                   INDUSTRIES
@@ -49,16 +49,16 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
-              <button
+              <span
                 key={item.label}
-                className="flex items-center gap-0.5 px-3 py-2 text-sm font-medium text-gray-600 hover:text-[#1e3a5f] transition-colors duration-150 rounded-md hover:bg-gray-50"
-                onClick={() => {}}
+                title="Navigation preview: this demo focuses on the RFQ"
+                className="flex items-center gap-0.5 px-3 py-2 text-sm font-medium text-gray-600"
               >
                 {item.label}
                 {item.hasDropdown && (
                   <ChevronDown size={13} className="text-gray-400 mt-0.5" />
                 )}
-              </button>
+              </span>
             ))}
           </nav>
 
@@ -71,7 +71,7 @@ export default function Header() {
             </div>
 
             {/* CTA Button */}
-            <button className="hidden sm:flex items-center gap-2 bg-[#1e3a5f] hover:bg-[#162d4a] text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-900/20 active:scale-95">
+            <button type="button" onClick={onRequestQuote} className="hidden sm:flex items-center gap-2 bg-[#1e3a5f] hover:bg-[#162d4a] text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-900/20 active:scale-95">
               Request a Quote
               <ArrowRight size={15} />
             </button>
@@ -100,20 +100,20 @@ export default function Header() {
           >
             <div className="px-4 py-3 space-y-1">
               {navItems.map((item) => (
-                <button
+                <div
                   key={item.label}
-                  className="flex items-center justify-between w-full px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-[#1e3a5f] hover:bg-gray-50 rounded-lg transition-colors"
+                  className="flex items-center justify-between w-full px-3 py-2.5 text-sm font-medium text-gray-700"
                 >
                   {item.label}
                   {item.hasDropdown && <ChevronDown size={14} className="text-gray-400" />}
-                </button>
+                </div>
               ))}
               <div className="pt-2 border-t border-gray-100">
                 <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-full px-3 py-1.5 w-fit mb-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                   <span className="text-amber-700 text-xs font-semibold">Interactive RFQ Demo</span>
                 </div>
-                <button className="flex items-center justify-center gap-2 w-full bg-[#1e3a5f] text-white text-sm font-semibold px-5 py-3 rounded-lg">
+                <button type="button" onClick={() => { setMobileOpen(false); onRequestQuote(); }} className="flex items-center justify-center gap-2 w-full bg-[#1e3a5f] text-white text-sm font-semibold px-5 py-3 rounded-lg">
                   Request a Quote <ArrowRight size={15} />
                 </button>
               </div>

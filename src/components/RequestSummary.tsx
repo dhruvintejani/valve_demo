@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { RFQData } from '../types/rfq';
+import { displaySpecification } from '../utils/rfqDisplay';
 
 interface RequestSummaryProps {
   data: RFQData;
@@ -76,10 +77,7 @@ export default function RequestSummary({ data }: RequestSummaryProps) {
       {/* Header */}
       <div className="bg-[#0f2040] px-5 py-4 flex items-center justify-between">
         <h2 className="text-white font-bold text-base">Your Request Summary</h2>
-        <div className="flex items-center gap-1.5 bg-amber-500/20 border border-amber-400/30 rounded-full px-2.5 py-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-          <span className="text-amber-300 text-xs font-semibold">Interactive Demo</span>
-        </div>
+        <span className="text-xs font-medium text-slate-300">Live preview</span>
       </div>
 
       <div className="p-4">
@@ -110,10 +108,10 @@ export default function RequestSummary({ data }: RequestSummaryProps) {
               <div className="text-center">
                 <div className="text-[#1d4ed8] font-bold text-sm">{getValveLabel(data.valveType)}</div>
                 {data.valveType === 'forged' && (
-                  <div className="text-gray-500 text-xs mt-0.5">High strength, compact design for high pressure and critical applications.</div>
+                  <div className="text-gray-500 text-xs mt-0.5">Forged Ball Valve enquiry.</div>
                 )}
                 {data.valveType === 'cast' && (
-                  <div className="text-gray-500 text-xs mt-0.5">Cost-effective and reliable for general industrial service.</div>
+                  <div className="text-gray-500 text-xs mt-0.5">Cast Ball Valve enquiry.</div>
                 )}
                 {data.valveType === 'not-sure' && (
                   <div className="text-gray-500 text-xs mt-0.5">Our team will recommend the best option for your requirements.</div>
@@ -140,21 +138,21 @@ export default function RequestSummary({ data }: RequestSummaryProps) {
             <Settings size={13} className="text-gray-400" />
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Technical Specs</span>
           </div>
-          <SummaryRow icon={<Settings size={13} />} label="Size" value={data.size} />
-          <SummaryRow icon={<Settings size={13} />} label="Pressure Class" value={data.pressureClass} />
+          <SummaryRow icon={<Settings size={13} />} label="Size" value={displaySpecification(data.size, data.otherSize)} />
+          <SummaryRow icon={<Settings size={13} />} label="Pressure Class" value={displaySpecification(data.pressureClass, data.otherPressureClass)} />
           <SummaryRow
             icon={<Settings size={13} />}
             label="Quantity"
             value={data.quantity !== '' && data.quantity !== undefined ? `${data.quantity} Nos.` : '—'}
           />
           {data.materialConstruction && (
-            <SummaryRow icon={<Settings size={13} />} label="Material Construction" value={data.materialConstruction} />
+            <SummaryRow icon={<Settings size={13} />} label="Material Construction" value={displaySpecification(data.materialConstruction, data.otherMaterialConstruction)} />
           )}
           {data.endConnection && (
-            <SummaryRow icon={<Settings size={13} />} label="End Connection" value={data.endConnection} />
+            <SummaryRow icon={<Settings size={13} />} label="End Connection" value={displaySpecification(data.endConnection, data.otherEndConnection)} />
           )}
           {data.applicationMedia && (
-            <SummaryRow icon={<Settings size={13} />} label="Application / Media" value={data.applicationMedia} />
+            <SummaryRow icon={<Settings size={13} />} label="Application / Media" value={displaySpecification(data.applicationMedia, data.otherApplicationMedia)} />
           )}
           {data.specialRequirements && (
             <div className="py-1.5 pl-6">

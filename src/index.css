@@ -61,3 +61,16 @@ input[type="number"] {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Menus are portaled outside the animated form accordion to prevent clipping. */
+@keyframes rfq-select-enter {
+  from { opacity: 0; transform: translateY(4px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.rfq-select-content[data-state="open"] {
+  transform-origin: var(--radix-select-content-transform-origin);
+  animation: rfq-select-enter 160ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rfq-select-content[data-state="open"] { animation: none !important; }
+}
