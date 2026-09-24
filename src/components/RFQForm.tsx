@@ -52,7 +52,7 @@ function SectionHeader({
         {number}
       </div>
       <div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <h2 className="text-base font-bold text-gray-900">{title}</h2>
           {optional && (
             <span className="text-xs font-semibold text-gray-400 bg-gray-100 rounded-full px-2 py-0.5">
@@ -82,12 +82,14 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
   const [data, setData] = useState<RFQData>(DEFAULT_DATA);
   const [errors, setErrors] = useState<RFQErrors>({});
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const valveSectionRef = useRef<HTMLDivElement>(null);
   const requiredSectionRef = useRef<HTMLDivElement>(null);
   const contactSectionRef = useRef<HTMLDivElement>(null);
 
   const updateData = (patch: Partial<RFQData>) => {
+    setSubmitError('');
     setData((prev) => ({ ...prev, ...patch }));
   };
 
@@ -107,8 +109,8 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
     if (!data.pressureClass) newErrors.pressureClass = 'Please select a pressure class.';
     if (data.quantity === '' || data.quantity === undefined) {
       newErrors.quantity = 'Please enter a quantity.';
-    } else if (Number(data.quantity) < 1) {
-      newErrors.quantity = 'Quantity must be at least 1.';
+    } else if (!Number.isSafeInteger(Number(data.quantity)) || Number(data.quantity) < 1) {
+      newErrors.quantity = 'Enter a whole-number quantity of at least 1.';
     }
     if (!data.fullName.trim()) newErrors.fullName = 'Full name is required.';
     if (!data.companyName.trim()) newErrors.companyName = 'Company name is required.';
@@ -117,7 +119,14 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
     } else if (!validateEmail(data.email)) {
       newErrors.email = 'Please enter a valid email address.';
     }
-    if (!data.phone.trim()) newErrors.phone = 'Phone number is required.';
+    if (!data.phone.trim()) {
+      newErrors.phone = 'Phone number is required.';
+    } else {
+      const digits = data.phone.replace(/\D/g, '');
+      if (!/^[+\d\s().-]+$/.test(data.phone) || digits.length < 6 || digits.length > 15) {
+        newErrors.phone = 'Enter a valid phone number (6–15 digits).';
+      }
+    }
 
     setErrors(newErrors);
 
@@ -136,12 +145,15 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    setSubmitError('');
     setSubmitting(true);
     try {
       const result = await submitRFQ(data);
       onSubmitSuccess(data, result);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch {
+      setSubmitError('The demo could not complete your submission. Please try again.');
+    } finally {
       setSubmitting(false);
     }
   };
@@ -311,6 +323,14 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
               </SectionCard>
             </motion.div>
 
+            {/* Mobile: optional review before submission, without an extra step. */}
+            <details className="lg:hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+              <summary className="cursor-pointer text-sm font-semibold text-[#1e3a5f] focus-visible:outline-2 focus-visible:outline-blue-600">
+                Review current request (optional)
+              </summary>
+              <div className="mt-4"><RequestSummary data={data} /></div>
+            </details>
+
             {/* Submit area */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -347,6 +367,8 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
                 </div>
               </div>
 
+              {submitError && <p role="alert" className="mt-4 text-sm font-medium text-red-600">{submitError}</p>}
+
               {/* Validation summary if errors exist */}
               <AnimatePresence>
                 {Object.keys(errors).length > 0 && (
@@ -373,10 +395,6 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
           </div>
         </div>
 
-        {/* Mobile: Summary at bottom */}
-        <div className="lg:hidden mt-5">
-          <RequestSummary data={data} />
-        </div>
       </form>
     </div>
   );
