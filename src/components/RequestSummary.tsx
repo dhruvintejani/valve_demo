@@ -108,10 +108,10 @@ export default function RequestSummary({ data }: RequestSummaryProps) {
               <div className="text-center">
                 <div className="text-[#1d4ed8] font-bold text-sm">{getValveLabel(data.valveType)}</div>
                 {data.valveType === 'forged' && (
-                  <div className="text-gray-500 text-xs mt-0.5">High strength, compact design for high pressure and critical applications.</div>
+                  <div className="text-gray-500 text-xs mt-0.5">Forged Ball Valve enquiry.</div>
                 )}
                 {data.valveType === 'cast' && (
-                  <div className="text-gray-500 text-xs mt-0.5">Cost-effective and reliable for general industrial service.</div>
+                  <div className="text-gray-500 text-xs mt-0.5">Cast Ball Valve enquiry.</div>
                 )}
                 {data.valveType === 'not-sure' && (
                   <div className="text-gray-500 text-xs mt-0.5">Our team will recommend the best option for your requirements.</div>
