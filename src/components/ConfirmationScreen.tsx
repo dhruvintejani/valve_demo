@@ -213,7 +213,7 @@ export default function ConfirmationScreen({ data, result, onSubmitAnother }: Co
                 className="hidden sm:flex items-center gap-1.5 text-xs text-[#2563eb] hover:text-blue-700 font-semibold border border-blue-200 hover:border-blue-300 rounded-lg px-3 py-1.5 transition-colors"
               >
                 <RotateCcw size={12} />
-                Edit & Submit Again
+                Start New Request
               </button>
             </div>
 
