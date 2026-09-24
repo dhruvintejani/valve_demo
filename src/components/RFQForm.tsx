@@ -19,11 +19,16 @@ interface RFQFormProps {
 const DEFAULT_DATA: RFQData = {
   valveType: '',
   size: '',
+  otherSize: '',
   pressureClass: '',
+  otherPressureClass: '',
   quantity: '',
   materialConstruction: '',
+  otherMaterialConstruction: '',
   endConnection: '',
+  otherEndConnection: '',
   applicationMedia: '',
+  otherApplicationMedia: '',
   specialRequirements: '',
   files: [],
   fullName: '',
@@ -86,6 +91,7 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
 
   const valveSectionRef = useRef<HTMLDivElement>(null);
   const requiredSectionRef = useRef<HTMLDivElement>(null);
+  const technicalSectionRef = useRef<HTMLDivElement>(null);
   const contactSectionRef = useRef<HTMLDivElement>(null);
 
   const updateData = (patch: Partial<RFQData>) => {
@@ -106,7 +112,22 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
 
     if (!data.valveType) newErrors.valveType = 'Please select a ball valve type.';
     if (!data.size) newErrors.size = 'Please select a size.';
+    if (data.size === 'other' && !data.otherSize?.trim()) {
+      newErrors.otherSize = 'Please specify the size in inches or millimetres.';
+    }
     if (!data.pressureClass) newErrors.pressureClass = 'Please select a pressure class.';
+    if (data.pressureClass === 'other' && !data.otherPressureClass?.trim()) {
+      newErrors.otherPressureClass = 'Please specify the pressure class.';
+    }
+    if (data.materialConstruction === 'other' && !data.otherMaterialConstruction?.trim()) {
+      newErrors.otherMaterialConstruction = 'Please specify the material.';
+    }
+    if (data.endConnection === 'other' && !data.otherEndConnection?.trim()) {
+      newErrors.otherEndConnection = 'Please specify the end connection.';
+    }
+    if (data.applicationMedia === 'other' && !data.otherApplicationMedia?.trim()) {
+      newErrors.otherApplicationMedia = 'Please specify the application or media.';
+    }
     if (data.quantity === '' || data.quantity === undefined) {
       newErrors.quantity = 'Please enter a quantity.';
     } else if (!Number.isSafeInteger(Number(data.quantity)) || Number(data.quantity) < 1) {
@@ -133,8 +154,10 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
     // Scroll to first error
     if (newErrors.valveType) {
       valveSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else if (newErrors.size || newErrors.pressureClass || newErrors.quantity) {
+    } else if (newErrors.size || newErrors.otherSize || newErrors.pressureClass || newErrors.otherPressureClass || newErrors.quantity) {
       requiredSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (newErrors.otherMaterialConstruction || newErrors.otherEndConnection || newErrors.otherApplicationMedia) {
+      technicalSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else if (newErrors.fullName || newErrors.companyName || newErrors.email || newErrors.phone) {
       contactSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
@@ -204,15 +227,27 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
                 />
                 <RequiredDetails
                   size={data.size}
+                  otherSize={data.otherSize || ''}
                   pressureClass={data.pressureClass}
+                  otherPressureClass={data.otherPressureClass || ''}
                   quantity={data.quantity}
                   onSizeChange={(v) => {
                     updateData({ size: v });
                     if (errors.size) clearError('size');
+                    if (errors.otherSize && v !== 'other') clearError('otherSize');
+                  }}
+                  onOtherSizeChange={(v) => {
+                    updateData({ otherSize: v });
+                    if (errors.otherSize) clearError('otherSize');
                   }}
                   onPressureClassChange={(v) => {
                     updateData({ pressureClass: v });
                     if (errors.pressureClass) clearError('pressureClass');
+                    if (errors.otherPressureClass && v !== 'other') clearError('otherPressureClass');
+                  }}
+                  onOtherPressureClassChange={(v) => {
+                    updateData({ otherPressureClass: v });
+                    if (errors.otherPressureClass) clearError('otherPressureClass');
                   }}
                   onQuantityChange={(v) => {
                     updateData({ quantity: v });
@@ -220,7 +255,9 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
                   }}
                   errors={{
                     size: errors.size,
+                    otherSize: errors.otherSize,
                     pressureClass: errors.pressureClass,
+                    otherPressureClass: errors.otherPressureClass,
                     quantity: errors.quantity,
                   }}
                 />
@@ -229,6 +266,7 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
 
             {/* Section 3: Additional Technical Details */}
             <motion.div
+              ref={technicalSectionRef}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.15 }}
@@ -242,12 +280,41 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
                 />
                 <TechnicalDetails
                   materialConstruction={data.materialConstruction || ''}
+                  otherMaterialConstruction={data.otherMaterialConstruction || ''}
                   endConnection={data.endConnection || ''}
+                  otherEndConnection={data.otherEndConnection || ''}
                   applicationMedia={data.applicationMedia || ''}
+                  otherApplicationMedia={data.otherApplicationMedia || ''}
                   specialRequirements={data.specialRequirements || ''}
-                  onMaterialChange={(v) => updateData({ materialConstruction: v })}
-                  onEndConnectionChange={(v) => updateData({ endConnection: v })}
-                  onApplicationMediaChange={(v) => updateData({ applicationMedia: v })}
+                  onMaterialChange={(v) => {
+                    updateData({ materialConstruction: v });
+                    if (errors.otherMaterialConstruction && v !== 'other') clearError('otherMaterialConstruction');
+                  }}
+                  onOtherMaterialChange={(v) => {
+                    updateData({ otherMaterialConstruction: v });
+                    if (errors.otherMaterialConstruction) clearError('otherMaterialConstruction');
+                  }}
+                  onEndConnectionChange={(v) => {
+                    updateData({ endConnection: v });
+                    if (errors.otherEndConnection && v !== 'other') clearError('otherEndConnection');
+                  }}
+                  onOtherEndConnectionChange={(v) => {
+                    updateData({ otherEndConnection: v });
+                    if (errors.otherEndConnection) clearError('otherEndConnection');
+                  }}
+                  onApplicationMediaChange={(v) => {
+                    updateData({ applicationMedia: v });
+                    if (errors.otherApplicationMedia && v !== 'other') clearError('otherApplicationMedia');
+                  }}
+                  onOtherApplicationMediaChange={(v) => {
+                    updateData({ otherApplicationMedia: v });
+                    if (errors.otherApplicationMedia) clearError('otherApplicationMedia');
+                  }}
+                  errors={{
+                    otherMaterialConstruction: errors.otherMaterialConstruction,
+                    otherEndConnection: errors.otherEndConnection,
+                    otherApplicationMedia: errors.otherApplicationMedia,
+                  }}
                   onSpecialRequirementsChange={(v) => updateData({ specialRequirements: v })}
                 />
               </SectionCard>
