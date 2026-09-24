@@ -98,7 +98,7 @@ export default function App() {
                   Ball Valve – <span className="text-[#60a5fa]">Request for Quotation</span>
                 </h1>
                 <p className="text-blue-200/70 text-sm mt-1">
-                  Thank you for your interest. We have received your requirement.
+                  Demo preview complete — no real RFQ has been submitted.
                 </p>
               </div>
             </div>
