@@ -182,7 +182,7 @@ export default function RFQForm({ onSubmitSuccess }: RFQFormProps) {
   };
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div id="rfq-form" className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 scroll-mt-20">
       <form onSubmit={handleSubmit} noValidate>
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* Left: Form */}
