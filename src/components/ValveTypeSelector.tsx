@@ -13,14 +13,14 @@ const valveTypes = [
   {
     id: 'forged' as ValveType,
     label: 'Forged Ball Valve',
-    description: 'High strength, compact design for high pressure and critical applications.',
+    description: 'Share your specifications for a forged Ball Valve quotation.',
     image: '/images/forged-ball-valve.png',
     hasImage: true,
   },
   {
     id: 'cast' as ValveType,
     label: 'Cast Ball Valve',
-    description: 'Cost-effective and reliable for general industrial service applications.',
+    description: 'Share your specifications for a cast Ball Valve quotation.',
     image: '/images/cast-ball-valve.png',
     hasImage: true,
   },
