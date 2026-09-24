@@ -53,7 +53,7 @@ test('complete RFQ supports technical documents, validation, review and demo-onl
   await page.getByRole('combobox', { name: 'Size' }).click();
   await page.getByRole('option', { name: '2" (DN50)' }).click();
   await page.getByRole('combobox', { name: 'Pressure Class' }).click();
-  await page.getByRole('option', { name: 'Class 150' }).click();
+  await page.getByRole('option', { name: 'Class 150', exact: true }).click();
   await page.getByLabel(/Quantity/i).fill('10');
 
   await page.locator('input[type="file"]').setInputFiles({
